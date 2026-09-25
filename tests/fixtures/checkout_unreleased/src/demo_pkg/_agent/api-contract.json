@@ -1,0 +1,1 @@
+{"schema_version": "1.0", "distribution": "demo-package", "import_package": "demo_pkg", "exports": [], "functions": [], "decorators": [], "classes": [], "exceptions": [], "behavior_ref": "behavior.md"}
