@@ -90,14 +90,14 @@ def from_installed(distribution: str) -> tuple[dict, str, str]:
     try:
         dist = metadata.distribution(distribution)
     except metadata.PackageNotFoundError as exc:
-        raise ContractError(f"published package {distribution!r} is not installed; provide --checkout or --wheel") from exc
+        raise ContractError(f"installed distribution {distribution!r} is unavailable; provide --checkout or --wheel") from exc
     files = list(dist.files or [])
     contract_rel = next((p for p in files if str(p).endswith("/_agent/api-contract.json") or str(p) == "_agent/api-contract.json"), None)
     if contract_rel is None:
         raise ContractError(f"installed distribution {distribution!r} has no _agent/api-contract.json")
     contract_path = Path(dist.locate_file(contract_rel))
     behavior_path = contract_path.with_name("behavior.md")
-    return _read_files(contract_path, behavior_path, "published", dist.version)
+    return _read_files(contract_path, behavior_path, "installed", dist.version)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -117,11 +117,16 @@ def main(argv: list[str] | None = None) -> int:
             contract, kind, version = from_installed(args.distribution)
         else:
             parser.error("one of --distribution, --checkout, or --wheel is required")
-        result = {"source_kind": kind, "version": version, "contract": contract}
+        result = {
+            "source_kind": kind,
+            "publication_state": "unknown",
+            "version": version,
+            "contract": contract,
+        }
         if args.as_json:
             print(json.dumps(result, indent=2, sort_keys=True))
         else:
-            print(f"source: {kind}\nversion: {version}\ndistribution: {contract['distribution']}\nimport package: {contract['import_package']}")
+            print(f"source: {kind}\npublication state: unknown\nversion: {version}\ndistribution: {contract['distribution']}\nimport package: {contract['import_package']}")
         return 0
     except (ContractError, OSError, zipfile.BadZipFile) as exc:
         print(f"error: {exc}", file=sys.stderr)

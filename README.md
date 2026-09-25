@@ -13,6 +13,11 @@ The resolver can be exercised without network access:
 ```bash
 python .agents/skills/lambda-api-decorators-development/scripts/load_api_contract.py --checkout tests/fixtures/checkout_unreleased --json
 python .agents/skills/lambda-api-decorators-development/scripts/load_api_contract.py --wheel path/to/package.whl --json
+python .agents/skills/lambda-api-decorators-development/scripts/load_api_contract.py --distribution distribution-name --json
 ```
+
+Resolver origins are `checkout`, `wheel`, and `installed`. Installation alone
+does not prove publication; structured output reports `publication_state:
+unknown` unless an external verification is explicitly added.
 
 Future skills should live below `.agents/skills/<lowercase-hyphenated-name>/`, include only resources needed by their workflow, add focused tests, and update this README with their purpose. This repository intentionally has no plugin, release process, API snapshots, or changelog.

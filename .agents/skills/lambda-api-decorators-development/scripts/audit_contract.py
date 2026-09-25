@@ -64,7 +64,7 @@ def main() -> int:
         dirty = bool(git(repo, "status", "--porcelain"))
         print(f"{name}: branch={git(repo, 'branch', '--show-current')} HEAD={git(repo, 'rev-parse', 'HEAD')} tag={git(repo, 'describe', '--tags', '--abbrev=0')} working_tree={'dirty' if dirty else 'clean'}")
         contracts = list(repo.rglob("_agent/api-contract.json"))
-        print(f"  contracts: {', '.join(map(str, contracts)) if contracts else 'none (published package may provide it)'}")
+        print(f"  contracts: {', '.join(map(str, contracts)) if contracts else 'none (an installed distribution may provide it)'}")
         for finding in python_findings(repo) + dependency_findings(repo):
             print(f"  {finding}")
     if args.root.name not in KNOWN:

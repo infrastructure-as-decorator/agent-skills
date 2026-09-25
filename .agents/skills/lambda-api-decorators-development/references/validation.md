@@ -7,4 +7,4 @@
 | Examples | Install released dependencies, run handler and stack tests, audit for manual claims and multiple routes. |
 | Docs | Build docs, verify links and examples against released contracts, avoid documenting unreleased API as current. |
 
-Use `scripts/load_api_contract.py --distribution NAME`, `--wheel FILE`, or `--checkout DIR`. Use `scripts/audit_contract.py --root DIR` for a non-fatal repository inventory; warnings require review, while a missing repository is reported as absent.
+Use `scripts/load_api_contract.py --distribution NAME`, `--wheel FILE`, or `--checkout DIR`. The resolver classifies these as `installed`, `wheel`, and `checkout` respectively; installation does not establish publication, so `publication_state` is `unknown`. Use `scripts/audit_contract.py --root DIR` for a non-fatal repository inventory; warnings require review, while a missing repository is reported as absent.
