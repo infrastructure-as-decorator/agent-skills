@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "distribution": "demo-package",
+  "import_package": "demo_package",
+  "exports": ["hello", "route"],
+  "functions": [{"name": "hello", "signature": "hello(name: str) -> str", "parameters": [{"name": "name", "type": "str", "required": true}], "returns": {"type": "str"}}],
+  "decorators": [{"name": "route", "signature": "route(path: str)", "usage": "@route('/hello')", "parameters": [{"name": "path", "type": "str", "required": true}], "behavior_ref": "routes"}],
+  "classes": [],
+  "exceptions": ["DemoError"],
+  "behavior_ref": "behavior.md"
+}
