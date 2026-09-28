@@ -17,16 +17,15 @@ jobs:
       - run: python -m pip install pytest
       - run: python -m pytest -q
       - run: python -m compileall -q .agents tests
-      - run: python .agents/skills/lambda-api-decorators-development/scripts/load_api_contract.py --checkout tests/fixtures/checkout_unreleased --json
+      - run: python .agents/skills/maintain-lambda-api-decorators/scripts/load_api_contract.py --checkout tests/fixtures/checkout_unreleased --json
       - run: |
           python - <<'PY'
           from pathlib import Path
-          skill = Path('.agents/skills/lambda-api-decorators-development')
-          assert (skill / 'SKILL.md').is_file()
-          assert not list(skill.rglob('api-contract.json'))
-          assert not list(skill.rglob('behavior.md')) or all(
-              'api-contract' not in p.name
-              for p in skill.rglob('behavior.md')
-          )
+          root = Path('.agents/skills')
+          for name in ('build-with-lambda-api-decorators', 'maintain-lambda-api-decorators'):
+              skill = root / name
+              assert (skill / 'SKILL.md').is_file()
+              assert not list(skill.rglob('api-contract.json'))
+              assert not list(skill.rglob('behavior.md'))
           PY
       - run: git diff --check
