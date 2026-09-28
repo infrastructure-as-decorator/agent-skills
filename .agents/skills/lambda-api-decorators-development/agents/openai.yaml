@@ -1,4 +1,0 @@
-interface:
-  display_name: "Lambda API Decorators development"
-  short_description: "Develop and audit Infrastructure as Decorators repos"
-  default_prompt: "Use $lambda-api-decorators-development to implement, review, test, or document a change across the Infrastructure as Decorators repositories."
