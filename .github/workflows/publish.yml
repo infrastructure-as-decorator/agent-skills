@@ -64,12 +64,20 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if release_tag="$(gh release view "$GITHUB_REF_NAME" --json tagName --jq .tagName 2>/dev/null)"; then
+          error_file="$RUNNER_TEMP/release-query-error"
+          set +e
+          release_tag="$(gh release view "$GITHUB_REF_NAME" --json tagName --jq .tagName 2>"$error_file")"
+          release_status=$?
+          set -e
+          if [ "$release_status" -eq 0 ]; then
             test "$release_tag" = "$GITHUB_REF_NAME"
             echo "Release $GITHUB_REF_NAME already exists; publication will not run again."
             echo "already_published=true" >> "$GITHUB_OUTPUT"
-          else
+          elif grep -Eiq 'not found|could not find' "$error_file"; then
             echo "already_published=false" >> "$GITHUB_OUTPUT"
+          else
+            cat "$error_file" >&2
+            exit "$release_status"
           fi
       - run: python -m pytest -q
       - run: python -m compileall -q skills tests

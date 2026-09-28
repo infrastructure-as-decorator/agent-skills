@@ -33,6 +33,8 @@ def test_publish_is_tag_only_and_safe_to_rerun():
     assert "gh skill publish --dry-run" in text
     assert 'gh skill publish --tag "$GITHUB_REF_NAME"' in text
     assert "gh release view" in text
+    assert "release-query-error" in text
+    assert "already_published=true" in text
     assert "gh release create" not in text
     assert "git commit" not in text
     assert "git push" not in text
