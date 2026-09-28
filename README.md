@@ -1,37 +1,55 @@
-# Infrastructure as Decorators agent skills
+# Infrastructure as Decorators Agent Skills
 
-Este repositorio contiene dos skills portables basados en Agent Skills:
+Este repositorio de GitHub es un catálogo portable de dos Agent Skills independientes:
 
-- `build-with-lambda-api-decorators` ayuda a desarrolladores a construir, probar y revisar aplicaciones que consumen las APIs públicas de `lambda-api-decorators` y `lambda-api-decorators-cdk`.
-- `maintain-lambda-api-decorators` ayuda a contributors y maintainers a cambiar las librerías, CDK, ejemplos y documentación oficial, coordinando source, tests, contratos, wheels y releases.
+- `build-with-lambda-api-decorators`: para desarrolladores que construyen aplicaciones con las APIs públicas de `lambda-api-decorators` y `lambda-api-decorators-cdk`.
+- `maintain-lambda-api-decorators`: para contributors y maintainers del runtime, CDK, ejemplos, documentación, contratos, tests, workflows y releases.
 
-Usa el skill de consumidores para solicitudes como “agrega `/me` protegido con Cognito a mi aplicación” o “usa `current_user` en mi handler”. Usa el skill de mantenimiento para “corrige `ResourceBuilder`”, “crea un ejemplo oficial con la versión publicada” o cambios en Docusaurus y workflows.
+No es necesario instalar ambos. Cada skill se instala y actualiza individualmente, aunque ambos se versionan bajo el mismo tag del catálogo. `lambda-api-decorators-development` fue reemplazado por estos dos skills y no existe un tercer alias activo.
 
-## Instalación
+## Instalación desde GitHub
 
-Para herramientas compatibles con Agent Skills, copia o enlaza uno o ambos directorios bajo el directorio de skills de la herramienta, por ejemplo:
+GitHub es el único canal de distribución. `gh skill` está en public preview y requiere GitHub CLI `2.90.0` o posterior. Antes de instalar un skill externo, revisa su contenido con `gh skill preview`. `gh skill` instala el skill en la ubicación correspondiente al agente y scope seleccionados.
+
+Skill para desarrolladores de aplicaciones:
 
 ```bash
-cp -R .agents/skills/build-with-lambda-api-decorators ~/.codex/skills/
-cp -R .agents/skills/maintain-lambda-api-decorators ~/.codex/skills/
+gh skill preview infrastructure-as-decorator/agent-skills \
+  build-with-lambda-api-decorators
+gh skill install infrastructure-as-decorator/agent-skills \
+  build-with-lambda-api-decorators
 ```
 
-También pueden instalarse como skills locales copiándolos a `.agents/skills/` del proyecto consumidor o mantenedor. No hay una dependencia obligatoria de Codex, Claude Code o GitHub Copilot; cada herramienta compatible puede descubrir `SKILL.md` y, opcionalmente, usar `agents/openai.yaml` como metadata específica de OpenAI.
+Skill para contributors y maintainers:
 
-`lambda-api-decorators-development` fue reemplazado por estos dos skills; no existe un tercer alias activo.
+```bash
+gh skill preview infrastructure-as-decorator/agent-skills \
+  maintain-lambda-api-decorators
+gh skill install infrastructure-as-decorator/agent-skills \
+  maintain-lambda-api-decorators
+```
 
-## Contratos y tooling
+Para fijar una instalación a una versión del catálogo:
 
-Los contratos `_agent/api-contract.json` y `_agent/behavior.md` se distribuyen dentro de los paquetes Python. La versión proviene de metadata de distribución (o de `METADATA` en un wheel), nunca del JSON; el JSON describe el contrato y no contiene una versión del paquete. La instalación por sí sola no demuestra publicación, por lo que el resolver informa `publication_state: unknown` cuando no existe evidencia suficiente.
+```bash
+gh skill install infrastructure-as-decorator/agent-skills \
+  build-with-lambda-api-decorators@v1.0.0
+```
 
-Los contratos empaquetados sirven para consumidores y distribuciones. Durante el desarrollo de las librerías, source y tests siguen siendo la autoridad. Los scripts internos de resolución, auditoría y validación pertenecen al skill de mantenimiento y no son un requisito normal para desarrollar una aplicación.
+`v1.0.0` es solamente un ejemplo; no se afirma que ese tag exista todavía. Las actualizaciones de un skill instalado se gestionan con `gh skill update`. El catálogo usa tags SemVer y GitHub Releases; no se crea una versión dentro de `SKILL.md`, `agents/openai.yaml` ni los contratos.
 
-## Desarrollo de este repositorio
+## Contratos y desarrollo
+
+Los contratos `_agent/api-contract.json` y `_agent/behavior.md` se distribuyen dentro de los paquetes Python. Usan `schema_version: "1.0"`; el JSON no contiene la versión del paquete. La versión se obtiene desde metadata de distribución. Si no existe evidencia suficiente de publicación, el resolver informa `publication_state: unknown`.
+
+Los contratos empaquetados son la autoridad para consumidores. Durante el desarrollo de las librerías, source y tests siguen siendo la autoridad. Los scripts de resolución y auditoría están reservados al skill de mantenimiento y no son un requisito normal para desarrollar una aplicación.
+
+## Desarrollo del catálogo
 
 ```bash
 python -m pytest -q
-python -m compileall -q .agents tests
+python -m compileall -q skills tests
 git diff --check
 ```
 
-No se mantienen snapshots estáticos de APIs, changelogs ni contratos copiados en este repositorio.
+No se mantienen snapshots estáticos de APIs, CHANGELOG ni contratos copiados en este repositorio.
