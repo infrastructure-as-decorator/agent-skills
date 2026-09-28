@@ -1,0 +1,4 @@
+interface:
+  display_name: "Maintain Lambda API Decorators"
+  short_description: "Maintain runtime, CDK, examples, and docs"
+  default_prompt: "Use $maintain-lambda-api-decorators to develop and validate a library, CDK, examples, or documentation change."

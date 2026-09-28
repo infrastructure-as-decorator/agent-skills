@@ -1,0 +1,4 @@
+interface:
+  display_name: "Build with Lambda API Decorators"
+  short_description: "Build applications with public Lambda APIs"
+  default_prompt: "Use $build-with-lambda-api-decorators to build or test an application using the published Lambda API Decorators APIs."

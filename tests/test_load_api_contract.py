@@ -6,7 +6,7 @@ import importlib.util
 import os
 from pathlib import Path
 
-SCRIPT = Path(__file__).parents[1] / ".agents/skills/lambda-api-decorators-development/scripts/load_api_contract.py"
+SCRIPT = Path(__file__).parents[1] / ".agents/skills/maintain-lambda-api-decorators/scripts/load_api_contract.py"
 FIXTURES = Path(__file__).parent / "fixtures"
 
 

@@ -2,7 +2,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-SCRIPT = Path(__file__).parents[1] / ".agents/skills/lambda-api-decorators-development/scripts/audit_contract.py"
+SCRIPT = Path(__file__).parents[1] / ".agents/skills/maintain-lambda-api-decorators/scripts/audit_contract.py"
 FIXTURES = Path(__file__).parent / "fixtures"
 
 
