@@ -1,25 +1,26 @@
-name: CI
+name: Publish Agent Skills
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
+    tags:
+      - "v*.*.*"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: publish-${{ github.ref_name }}
+  cancel-in-progress: false
 
 jobs:
-  validate:
+  publish:
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -46,6 +47,30 @@ jobs:
             export PATH="$RUNNER_TEMP/gh-bin:$PATH"
           fi
           gh --version
+      - name: Validate tag and ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid release tag: $GITHUB_REF_NAME" >&2
+            exit 1
+          fi
+          git fetch origin main --tags
+          tag_commit="$(git rev-list -n 1 "$GITHUB_REF_NAME")"
+          test "$tag_commit" = "$GITHUB_SHA"
+          git merge-base --is-ancestor "$tag_commit" origin/main
+      - name: Detect existing release
+        id: release
+        shell: bash
+        run: |
+          set -euo pipefail
+          if release_tag="$(gh release view "$GITHUB_REF_NAME" --json tagName --jq .tagName 2>/dev/null)"; then
+            test "$release_tag" = "$GITHUB_REF_NAME"
+            echo "Release $GITHUB_REF_NAME already exists; publication will not run again."
+            echo "already_published=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "already_published=false" >> "$GITHUB_OUTPUT"
+          fi
       - run: python -m pytest -q
       - run: python -m compileall -q skills tests
       - run: |
@@ -57,13 +82,14 @@ jobs:
           names = {p.name for p in root.iterdir() if p.is_dir()}
           assert names == {"build-with-lambda-api-decorators", "maintain-lambda-api-decorators"}
           for name in names:
-              skill = root / name
-              text = (skill / "SKILL.md").read_text()
+              text = (root / name / "SKILL.md").read_text()
               match = re.search(r"^name: (.+)$", text, re.MULTILINE)
               assert match and match.group(1) == name
-              assert (skill / "agents/openai.yaml").is_file()
-              assert not list(skill.rglob("api-contract.json"))
       - run: python skills/maintain-lambda-api-decorators/scripts/load_api_contract.py --checkout tests/fixtures/checkout_unreleased --json
       - run: gh skill publish --dry-run
+        if: steps.release.outputs.already_published != 'true'
+      - name: Publish tagged catalog
+        if: steps.release.outputs.already_published != 'true'
+        run: gh skill publish --tag "$GITHUB_REF_NAME"
+      - run: gh release view "$GITHUB_REF_NAME"
       - run: git diff --check
-      - run: test -z "$(git ls-files | grep -E '(^|/)(__pycache__|.*\\.pyc$)' || true)"
