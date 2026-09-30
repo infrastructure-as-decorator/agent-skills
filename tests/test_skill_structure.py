@@ -10,7 +10,7 @@ def frontmatter(skill):
     text = (skill / "SKILL.md").read_text()
     match = re.match(r"^---\n(.*?)\n---", text, re.DOTALL)
     assert match
-    return dict(re.findall(r"^(name|description): (.+)$", match.group(1), re.MULTILINE))
+    return dict(re.findall(r"^(name|description|license): (.+)$", match.group(1), re.MULTILINE))
 
 
 def test_exactly_two_public_skills_match_frontmatter():
@@ -23,6 +23,7 @@ def test_exactly_two_public_skills_match_frontmatter():
         metadata = frontmatter(SKILLS / name)
         assert metadata["name"] == name
         assert metadata["description"]
+        assert metadata["license"] == "MIT"
 
 
 def test_skills_have_distinct_responsibilities_and_no_static_contracts():

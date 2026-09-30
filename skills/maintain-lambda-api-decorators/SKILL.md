@@ -1,6 +1,7 @@
 ---
 name: maintain-lambda-api-decorators
 description: Develop and maintain the lambda-api-decorators runtime, CDK, official examples, and documentation repositories, including contracts, tests, wheels, release coordination, and CI.
+license: MIT
 ---
 
 # Maintain Lambda API Decorators
