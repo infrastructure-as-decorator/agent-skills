@@ -1,6 +1,7 @@
 ---
 name: build-with-lambda-api-decorators
 description: Build, fix, test, or review an application that consumes the public lambda-api-decorators or lambda-api-decorators-cdk APIs, including routes, LambdaApi, Cognito, authorizers, registries, grants, roles, environments, Layers, and REST or HTTP APIs.
+license: MIT
 ---
 
 # Build with Lambda API Decorators
