@@ -14,8 +14,6 @@ GitHub es el único canal de distribución. `gh skill` está en public preview y
 Skill para desarrolladores de aplicaciones:
 
 ```bash
-gh skill preview infrastructure-as-decorator/agent-skills \
-  build-with-lambda-api-decorators
 gh skill install infrastructure-as-decorator/agent-skills \
   build-with-lambda-api-decorators
 ```
@@ -23,8 +21,6 @@ gh skill install infrastructure-as-decorator/agent-skills \
 Skill para contributors y maintainers:
 
 ```bash
-gh skill preview infrastructure-as-decorator/agent-skills \
-  maintain-lambda-api-decorators
 gh skill install infrastructure-as-decorator/agent-skills \
   maintain-lambda-api-decorators
 ```
