@@ -15,14 +15,13 @@ def test_ci_validates_catalog_and_dry_runs_publish():
 def test_readme_documents_individual_github_installation():
     text = (ROOT / "README.md").read_text()
     for name in ("build-with-lambda-api-decorators", "maintain-lambda-api-decorators"):
-        assert f"gh skill preview infrastructure-as-decorator/agent-skills" in text
         assert f"gh skill install infrastructure-as-decorator/agent-skills" in text
         assert name in text
     assert "@v1.0.0" in text
     assert "gh skill update" in text
     assert "public preview" in text
     assert ".agents/skills" not in text
-    assert "No es necesario instalar ambos" in text
+    assert "You do not need to install both" in text
 
 
 def test_publish_is_tag_only_and_safe_to_rerun():

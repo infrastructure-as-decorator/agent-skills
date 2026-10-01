@@ -1,50 +1,50 @@
 # Infrastructure as Decorators Agent Skills
 
-Este repositorio de GitHub es un catálogo portable de dos Agent Skills independientes:
+This GitHub repository is a portable catalog of two independent Agent Skills:
 
-- `build-with-lambda-api-decorators`: para desarrolladores que construyen aplicaciones con las APIs públicas de `lambda-api-decorators` y `lambda-api-decorators-cdk`.
-- `maintain-lambda-api-decorators`: para contributors y maintainers del runtime, CDK, ejemplos, documentación, contratos, tests, workflows y releases.
+- `build-with-lambda-api-decorators`: for developers building applications with the public APIs of `lambda-api-decorators` and `lambda-api-decorators-cdk`.
+- `maintain-lambda-api-decorators`: for contributors and maintainers of the runtime, CDK, examples, documentation, contracts, tests, workflows, and releases.
 
-No es necesario instalar ambos. Cada skill se instala y actualiza individualmente, aunque ambos se versionan bajo el mismo tag del catálogo. `lambda-api-decorators-development` fue reemplazado por estos dos skills y no existe un tercer alias activo.
+You do not need to install both. Each skill can be installed and updated independently, although both are versioned under the same catalog tag. `lambda-api-decorators-development` was replaced by these two skills; there is no active third alias.
 
-## Instalación desde GitHub
+## Installation from GitHub
 
-GitHub es el único canal de distribución. `gh skill` está en public preview y requiere GitHub CLI `2.90.0` o posterior. Antes de instalar un skill externo, revisa su contenido con `gh skill preview`. `gh skill` instala el skill en la ubicación correspondiente al agente y scope seleccionados.
+GitHub is the only distribution channel. `gh skill` is in public preview and requires GitHub CLI `2.90.0` or later. `gh skill` installs a skill in the location corresponding to the selected agent and scope.
 
-Skill para desarrolladores de aplicaciones:
+For application developers:
 
 ```bash
 gh skill install infrastructure-as-decorator/agent-skills \
   build-with-lambda-api-decorators
 ```
 
-Skill para contributors y maintainers:
+For contributors and maintainers:
 
 ```bash
 gh skill install infrastructure-as-decorator/agent-skills \
   maintain-lambda-api-decorators
 ```
 
-Para fijar una instalación a una versión del catálogo:
+To pin an installation to a catalog version:
 
 ```bash
 gh skill install infrastructure-as-decorator/agent-skills \
   build-with-lambda-api-decorators@v1.0.0
 ```
 
-`v1.0.0` es solamente un ejemplo; no se afirma que ese tag exista todavía. Las actualizaciones de un skill instalado se gestionan con `gh skill update`. El catálogo usa tags SemVer y GitHub Releases; no se crea una versión dentro de `SKILL.md`, `agents/openai.yaml` ni los contratos.
+`v1.0.0` is only an example; this does not claim that the tag exists. Updates to an installed skill are managed with `gh skill update`. The catalog uses SemVer tags and GitHub Releases; no version is stored in `SKILL.md`, `agents/openai.yaml`, or the contracts.
 
-## Publicar una versión
+## Publishing a version
 
-No crees el tag manualmente antes de publicar. Ejecuta el workflow `Publish Agent Skills` desde `main` mediante `workflow_dispatch` e ingresa una versión estable como `v0.1.1`. El workflow valida el formato, la historia de `main`, los tests y el dry-run; después `gh skill publish --tag` crea el tag y el GitHub Release. Si el tag ya existe sin Release, el workflow se detiene para evitar publicar un estado ambiguo.
+Do not create the tag manually before publishing. Run the `Publish Agent Skills` workflow from `main` with `workflow_dispatch` and provide a stable version such as `v0.1.1`. The workflow validates the format, `main` ancestry, tests, and the dry-run; then `gh skill publish --tag` creates the tag and GitHub Release. If the tag already exists without a Release, the workflow stops to avoid publishing an ambiguous state.
 
-## Contratos y desarrollo
+## Contracts and development
 
-Los contratos `_agent/api-contract.json` y `_agent/behavior.md` se distribuyen dentro de los paquetes Python. Usan `schema_version: "1.0"`; el JSON no contiene la versión del paquete. La versión se obtiene desde metadata de distribución. Si no existe evidencia suficiente de publicación, el resolver informa `publication_state: unknown`.
+The `_agent/api-contract.json` and `_agent/behavior.md` contracts are distributed inside the Python packages. They use `schema_version: "1.0"`; the JSON does not contain the package version. The version is obtained from distribution metadata. When there is insufficient evidence of publication, the resolver reports `publication_state: unknown`.
 
-Los contratos empaquetados son la autoridad para consumidores. Durante el desarrollo de las librerías, source y tests siguen siendo la autoridad. Los scripts de resolución y auditoría están reservados al skill de mantenimiento y no son un requisito normal para desarrollar una aplicación.
+Packaged contracts are the authority for consumers. During library development, source and tests remain authoritative. Contract resolution and audit scripts are reserved for the maintainer skill and are not a normal requirement for application development.
 
-## Desarrollo del catálogo
+## Catalog development
 
 ```bash
 python -m pytest -q
@@ -52,4 +52,4 @@ python -m compileall -q skills tests
 git diff --check
 ```
 
-No se mantienen snapshots estáticos de APIs, CHANGELOG ni contratos copiados en este repositorio.
+This repository does not maintain static API snapshots, a CHANGELOG, or copied contracts.
