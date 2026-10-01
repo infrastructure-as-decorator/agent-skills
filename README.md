@@ -38,6 +38,10 @@ gh skill install infrastructure-as-decorator/agent-skills \
 
 `v1.0.0` es solamente un ejemplo; no se afirma que ese tag exista todavía. Las actualizaciones de un skill instalado se gestionan con `gh skill update`. El catálogo usa tags SemVer y GitHub Releases; no se crea una versión dentro de `SKILL.md`, `agents/openai.yaml` ni los contratos.
 
+## Publicar una versión
+
+No crees el tag manualmente antes de publicar. Ejecuta el workflow `Publish Agent Skills` desde `main` mediante `workflow_dispatch` e ingresa una versión estable como `v0.1.1`. El workflow valida el formato, la historia de `main`, los tests y el dry-run; después `gh skill publish --tag` crea el tag y el GitHub Release. Si el tag ya existe sin Release, el workflow se detiene para evitar publicar un estado ambiguo.
+
 ## Contratos y desarrollo
 
 Los contratos `_agent/api-contract.json` y `_agent/behavior.md` se distribuyen dentro de los paquetes Python. Usan `schema_version: "1.0"`; el JSON no contiene la versión del paquete. La versión se obtiene desde metadata de distribución. Si no existe evidencia suficiente de publicación, el resolver informa `publication_state: unknown`.
