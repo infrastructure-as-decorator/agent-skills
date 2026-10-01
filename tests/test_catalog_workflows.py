@@ -27,14 +27,18 @@ def test_readme_documents_individual_github_installation():
 
 def test_publish_is_tag_only_and_safe_to_rerun():
     text = (ROOT / ".github/workflows/publish.yml").read_text()
-    assert 'tags:' in text and '"v*.*.*"' in text
+    assert "workflow_dispatch:" in text
+    assert 'description: "Stable catalog version' in text
+    assert "VERSION: ${{ inputs.version }}" in text
     assert "^v[0-9]+\\.[0-9]+\\.[0-9]+$" in text
     assert "git merge-base --is-ancestor" in text
+    assert 'git ls-remote --exit-code origin "refs/tags/$VERSION"' in text
     assert "gh skill publish --dry-run" in text
-    assert 'gh skill publish --tag "$GITHUB_REF_NAME"' in text
+    assert 'gh skill publish --tag "$VERSION"' in text
     assert "gh release view" in text
     assert "release-query-error" in text
     assert "already_published=true" in text
+    assert "ref: main" in text
     assert "gh release create" not in text
     assert "git commit" not in text
     assert "git push" not in text
